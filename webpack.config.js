@@ -46,6 +46,18 @@ module.exports = {
          * 由于这个webpack4.0不再支持，因此建议使用[mini-css-extract-plugin](https://www.npmjs.com/package/mini-css-extract-plugin)来代替
          */
       }, 
+      {
+        test: /\.less$/,
+        include: [
+          path.resolve(__dirname, 'src'),
+        ],
+        // 这位这个插件需要干涉模块转换的内容，所以需要使用它对应的loader
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'less-loader',
+        ],
+      },
     ],
   },
   
