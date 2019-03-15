@@ -1,0 +1,34 @@
+{
+  "name": "vue-iview",
+  "version": "1.0.0",
+  "description": "A project which have the ui like iview",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --mode production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZadaWu/vue-iview.git"
+  },
+  "keywords": [
+    "iview",
+    "vue"
+  ],
+  "author": "zhangming.wu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ZadaWu/vue-iview/issues"
+  },
+  "homepage": "https://github.com/ZadaWu/vue-iview#readme",
+  "dependencies": {
+    "@babel/core": "^7.3.4",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.0.5",
+    "uglifyjs-webpack-plugin": "^2.1.2",
+    "webpack": "^4.29.6"
+  },
+  "devDependencies": {
+    "webpack-cli": "^3.2.3"
+  }
+}
