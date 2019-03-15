@@ -51,11 +51,22 @@ module.exports = {
         include: [
           path.resolve(__dirname, 'src'),
         ],
-        // 这位这个插件需要干涉模块转换的内容，所以需要使用它对应的loader
         use: [
           MiniCssExtractPlugin.loader,
           'css-loader',
           'less-loader',
+        ],
+        /**
+         * 这个插件需要干涉模块转换的内容，所以需要使用它对应的loader：less-loader，还要安装依赖less
+         */
+      },
+      {
+        test: /\.(png|jpg|git$)/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {},
+          },
         ],
       },
     ],
