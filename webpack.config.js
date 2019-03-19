@@ -19,13 +19,25 @@ module.exports = {
   },
 
   module: {
+    noParse: /jquery|lodash/, // 正则表达式 匹配独立的第三方大型库类
     rules: [
+      /* ESlint 编码检测 */
+      {
+        enforce: 'pre', // 指定为前置类型
+        test: /\.jsx?/,
+        include: [
+          path.resolve(__dirname, 'src')
+        ],
+        exclude: /node_modules/, // 不需要解析的部分
+        loader: "eslint-loader",
+      },
       /* js解析 */
       {
         test: /\.jsx?/,
         include: [
           path.resolve(__dirname, 'src')
         ],
+        exclude: /node_modules/, // 不需要解析的部分
         use:'babel-loader'
       },
       /* 引入loader来解析和处理css文件 */
@@ -76,9 +88,11 @@ module.exports = {
   resolve: {
     modules: [
       "node_modules",
-      path.resolve(__dirname, 'src')
+      path.resolve(__dirname, 'src'),
+      // 默认不用配置，但是如果有些类库是放在一些奇怪的地方的，你可以添加自定义的路径或,可以在node_modues之前配置一个确定的绝对路径
     ],
-    extensions: [".wasm", ".mjs", ".js", ".json", ".jsx"]
+    extensions: [".wasm", ".mjs", ".js", ".json", ".jsx", '.css']
+    // 这里的顺序代表匹配后缀的优先级，例如对于 index.js 和 index.jsx，会优先选择 index.js
   },
 
   plugins: [
@@ -97,7 +111,7 @@ module.exports = {
      * 如果需要添加多个页面关联，那么实例化多个html-webpack-plugin,并将它们都放到plugins字段就OK
      */
     new MiniCssExtractPlugin({
-      filename: "[name].css",
+      filename: "[name].css", //位每一个入口创建独立分离的文件
       chunkFilename: "[id].css"
     })
   ]
