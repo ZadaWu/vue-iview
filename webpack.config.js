@@ -16,7 +16,10 @@ module.exports = (env, argv) => {
    *     bar: './src/page-bar.js',
    *  }
    *  */ 
-  entry: './src/index.js',
+  entry: {
+    index: './src/index.js',
+    vendor: ['react', 'lodash', 'angular'] // 指定公共使用的第三方类库
+  },
 
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -24,8 +27,13 @@ module.exports = (env, argv) => {
   },
 
   optimization: {
-    splitChunks: {
-      chunks: 'all', // 所有的 chunks 代码公共的部分分离出来成为一个单独的文件 
+    cacheGroups: {
+      vendor: {
+        chunks: 'initial',
+        test: path.resolve(__dirname, 'node_modules'), // 路径在 node_modules 目录下的都作为公共部分
+        name: 'vendor', // 使用 vendor 入口作为公共部分
+        enforce: true
+      },
     }
   },
 

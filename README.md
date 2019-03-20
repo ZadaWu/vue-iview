@@ -48,3 +48,4 @@
   其实，webpack把多个代码文件打包成几个必须的静态资源，已经很大程度减少了静态资源请求数量了
   * 图片加载优化和代码压缩（CSS Sprites/ 图片压缩 image-webpack-loader/使用DataURL/代码压缩）
   * [分离代码文件](https://webpack.docschina.org/guides/code-splitting/)。为何要把css文件分离出来，而不是直接一起打包在JS中，最主要的原因是我们希望更好的利用缓存。
+  * [懒加载组件在vue中的应用](https://alexjover.com/blog/lazy-load-in-vue-using-webpack-s-code-splitting/)
