@@ -1,10 +1,11 @@
-const webpack = require('webpack')
-const path = require('path')
-const UglifyPlugin = require('uglifyjs-webpack-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const MiniCssExtractPlugin = require("mini-css-extract-plugin")
-const mock = require('./mock.js')
-const ManifestPlugin = require('webpack-manifest-plugin')
+const webpack = require('webpack');
+const path = require('path');
+const UglifyPlugin = require('uglifyjs-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const mock = require('./mock.js');
+const ManifestPlugin = require('webpack-manifest-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = (env, argv) => {
   console.log(9, argv.mode);
@@ -16,24 +17,25 @@ module.exports = (env, argv) => {
    *     bar: './src/page-bar.js',
    *  }
    *  */ 
-  entry: {
-    index: './src/index.js',
-    vendor: ['react', 'lodash', 'angular'] // 指定公共使用的第三方类库
-  },
+  entry: './src/index.js',
 
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js'
+    filename: '[name].[hash:8].js',
+    chunkFilename: '[name].[hash:8].js' // 指定分离出来的代码文件的名称
   },
 
   optimization: {
-    cacheGroups: {
-      vendor: {
-        chunks: 'initial',
-        test: path.resolve(__dirname, 'node_modules'), // 路径在 node_modules 目录下的都作为公共部分
-        name: 'vendor', // 使用 vendor 入口作为公共部分
-        enforce: true
-      },
+    runtimeChunk: 'single',
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          chunks: 'all',
+          test: path.resolve(__dirname, 'node_modules'), // 路径在 node_modules 目录下的都作为公共部分
+          name: 'vendor', // 使用 vendor 入口作为公共部分
+          enforce: true
+        }
+      }
     }
   },
 
@@ -125,7 +127,7 @@ module.exports = (env, argv) => {
             'plugins': [
               'dynamic-import-webpack'
             ],
-            presets: ['@babel/preset-env']
+            presets: [['@babel/preset-env', { 'modules': false, 'loose': true }]]
           }
         }]
       },
@@ -180,11 +182,16 @@ module.exports = (env, argv) => {
       path.resolve(__dirname, 'src'),
       // 默认不用配置，但是如果有些类库是放在一些奇怪的地方的，你可以添加自定义的路径或,可以在node_modues之前配置一个确定的绝对路径
     ],
-    extensions: [".wasm", ".mjs", ".js", ".json", ".jsx", '.css']
+    // 删除不必要的后缀自动补全，少了文件后缀的自动匹配，即减少了文件路径参训的工作
+    // 其他文件可以在编码时制定后缀，如import('./index.scss')
+    extensions: ['.js'],
     // 这里的顺序代表匹配后缀的优先级，例如对于 index.js 和 index.jsx，会优先选择 index.js
+    // 避免新增默认文件，编码时使用详细的文件路径，代码会更容易解读，也有益于提高构建速度
+    mainFiles: ['index']
   },
 
   plugins: [
+    new CleanWebpackPlugin(),
     // 里面的参数是用来解决import与箭头函数可能出错的
     new UglifyPlugin({
       sourceMap: true,

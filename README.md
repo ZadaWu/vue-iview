@@ -49,3 +49,11 @@
   * 图片加载优化和代码压缩（CSS Sprites/ 图片压缩 image-webpack-loader/使用DataURL/代码压缩）
   * [分离代码文件](https://webpack.docschina.org/guides/code-splitting/)。为何要把css文件分离出来，而不是直接一起打包在JS中，最主要的原因是我们希望更好的利用缓存。
   * [懒加载组件在vue中的应用](https://alexjover.com/blog/lazy-load-in-vue-using-webpack-s-code-splitting/)
+  * 进一步控制JS代码
+    1. 按需加载模块，遵循ES标准的动态加载语法。动态加载代码时依赖于网络，其模块内容会异步返回，所以 import 方法是返回一个 promise 来获取动态加载的模块内容。
+    2. Tree shaking 依赖于ES2015模块系统中的静态结构属性，可以移除Javascript上下午呢中的未饮用代码，删掉用不着的代码，能够有效减少JS代码文件的大小
+    3. 使用sideEffects来配置package.json来保证只是用暴露出去的模块
+
+  17. 提升webpack的构建速度
+  提升 webpack 构建速度本质上就是想办法让 webpack 少干点活，活少了速度自然快了，尽量避免 webpack 去做一些不必要的事情。
+    * 减少resolve的解析： 如果我们可以精简resolve配置，让webpack在查询模块路径时能尽可能快速定位到需要的模块，不用做额外工作，那么构建速度也会快

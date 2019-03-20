@@ -1,6 +1,7 @@
 import './style/index.css';
 import './style/index1.less';
 import _ from 'lodash';
+import { Apple } from './component.js';
 
 function component() {
   let element = document.createElement('div');
@@ -12,7 +13,7 @@ function component() {
   element.appendChild(br);
   element.appendChild(button);
 
-  button.onclick = e => import(/* webpackChunkName: "print" */'./print').then(module => {
+  button.onclick = e => import(/* webpackChunkName: "print" */'./print.js').then(module => {
     var print = module.default;
     print();
   });
@@ -20,3 +21,9 @@ function component() {
 }
 
 document.body.appendChild(component());
+
+const appleModel = new Apple({
+  model: 'X'
+}).getModel();
+
+console.log(appleModel);
