@@ -44,6 +44,48 @@ module.exports = (env, argv) => {
   module: {
     noParse: /jquery|lodash/, // 正则表达式 匹配独立的第三方大型库类
     rules: [
+      /* 对于很小的图片，犹豫某些缘故不想用css sprites来处理的，可以用url-loader来处理这些很小的图片 */
+      {
+        test: /\.(png|jpg|git)$/,
+        use: [{
+          loader: 'url-loader',
+          options: {
+            limit: 8192, // 单位是byte，当文件小雨8KB时作为DataURL处理
+          }
+        }]
+      },
+      /* 图片压缩 */
+      {
+        test: /.*\.(git|png|jgeg|svg|webp)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {}
+          },
+          {
+            loader: 'image-webpack-loader',
+            options: {
+              mozjpeg: { // 压缩 jpeg 的配置
+                progressive: true,
+                quality: 65
+              },
+              optipng: { // 使用 imagemin-optipng 压缩 png，enable: false 为关闭
+                enabled: false,
+              },
+              pngquant: { // 使用 imagemin-pngquant 压缩 png
+                quality: '65-90',
+                speed: 4
+              },
+              gifsicle: { // 压缩 gif 的配置
+                interlaced: false,
+              },
+              webp: { // 开启 webp，会把 jpg 和 png 图片压缩为 webp 格式
+                quality: 75
+              },
+            }
+          }
+        ]
+      },
       /* ESlint 编码检测 */
       {
         enforce: 'pre', // 指定为前置类型
@@ -72,7 +114,12 @@ module.exports = (env, argv) => {
         use: [
           MiniCssExtractPlugin.loader,
           // 'style-loader',
-          'css-loader'
+          {
+            loader: 'css-loader',
+            options: {
+              minimize: true, // 使用 css 的压缩功能
+            },
+          },
         ]
         /**
          * css-loader 负责解析css代码，主要是为了处理css的依赖，例如： `@import`和`url（）`等引用外部的声明
@@ -125,6 +172,10 @@ module.exports = (env, argv) => {
     new HtmlWebpackPlugin({
       filename: 'index.html', // 配置输出文件名和路径
       template: 'assets/index.html', //配置文件模板
+      minify: { // 压缩 HTML 的配置
+        minifyCSS: true, // 压缩 HTML 中出现的 CSS 代码
+        minifyJS: true // 压缩 HTML 中出现的 JS 代码
+      }
     }),
     /**
      * 构建时`html-webpack-plugin`会为我们创建一个HTML文件，其中会引用构建出来的js文件
