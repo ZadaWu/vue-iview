@@ -26,4 +26,4 @@ const appleModel = new Apple({
   model: 'X'
 }).getModel();
 
-console.log(appleModel);
+console.log(appleModel, '123121233');

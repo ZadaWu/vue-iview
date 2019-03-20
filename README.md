@@ -57,3 +57,7 @@
   17. 提升webpack的构建速度
   提升 webpack 构建速度本质上就是想办法让 webpack 少干点活，活少了速度自然快了，尽量避免 webpack 去做一些不必要的事情。
     * 减少resolve的解析： 如果我们可以精简resolve配置，让webpack在查询模块路径时能尽可能快速定位到需要的模块，不用做额外工作，那么构建速度也会快
+    * 把 loader 应用的文件范围缩小: 我们在使用loader的时候，尽可能把loader应用的文件范围缩小，只在最少数必须的代码模块中去使用必要的loader，例如 node_modules目录下的其他依赖库文件，基本就是直接编译好可用的代码，无需再经过laoder处理了
+    * 减少plugin的消耗:这里再提一下 webpack 4.x 的 mode，区分 mode 会让 webpack 的构建更加有针对性，更加高效。例如当 mode 为 development 时，webpack 会避免使用一些提高应用代码加载性能的配置项，如 UglifyJsPlugin，ExtractTextPlugin 等，这样可以更快地启动开发环境的服务，而当 mode 为 production 时，webpack 会避免使用一些便于 debug 的配置，来提升构建时的速度，例如极其消耗性能的 Source Maps 支持。（这个真的跪了跪了，我编译的时间从10s减少到1s）
+    * 换种方式处理图片：我们可以直接使用 imagemin 来做图片压缩，编写简单的命令即可。然后使用 pre-commit 这个类库来配置对应的命令，使其在 git commit 的时候触发，并且将要提交的文件替换为压缩后的文件。这样提交到代码仓库的图片就已经是压缩好的了，以后在项目中再次使用到的这些图片就无需再进行压缩处理了，image-webpack-loader 也就没有必要了。
+

@@ -71,37 +71,37 @@ module.exports = (env, argv) => {
         }]
       },
       /* 图片压缩 */
-      {
-        test: /.*\.(git|png|jgeg|svg|webp)$/i,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {}
-          },
-          {
-            loader: 'image-webpack-loader',
-            options: {
-              mozjpeg: { // 压缩 jpeg 的配置
-                progressive: true,
-                quality: 65
-              },
-              optipng: { // 使用 imagemin-optipng 压缩 png，enable: false 为关闭
-                enabled: false,
-              },
-              pngquant: { // 使用 imagemin-pngquant 压缩 png
-                quality: '65-90',
-                speed: 4
-              },
-              gifsicle: { // 压缩 gif 的配置
-                interlaced: false,
-              },
-              webp: { // 开启 webp，会把 jpg 和 png 图片压缩为 webp 格式
-                quality: 75
-              },
-            }
-          }
-        ]
-      },
+      // {
+      //   test: /.*\.(git|png|jgeg|svg|webp)$/i,
+      //   use: [
+      //     {
+      //       loader: 'file-loader',
+      //       options: {}
+      //     },
+      //     {
+      //       loader: 'image-webpack-loader',
+      //       options: {
+      //         mozjpeg: { // 压缩 jpeg 的配置
+      //           progressive: true,
+      //           quality: 65
+      //         },
+      //         optipng: { // 使用 imagemin-optipng 压缩 png，enable: false 为关闭
+      //           enabled: false,
+      //         },
+      //         pngquant: { // 使用 imagemin-pngquant 压缩 png
+      //           quality: '65-90',
+      //           speed: 4
+      //         },
+      //         gifsicle: { // 压缩 gif 的配置
+      //           interlaced: false,
+      //         },
+      //         webp: { // 开启 webp，会把 jpg 和 png 图片压缩为 webp 格式
+      //           quality: 75
+      //         },
+      //       }
+      //     }
+      //   ]
+      // },
       /* ESlint 编码检测 */
       {
         enforce: 'pre', // 指定为前置类型
@@ -193,10 +193,10 @@ module.exports = (env, argv) => {
   plugins: [
     new CleanWebpackPlugin(),
     // 里面的参数是用来解决import与箭头函数可能出错的
-    new UglifyPlugin({
-      sourceMap: true,
-      uglifyOptions: { ecma: 8 },
-    }),
+    // new UglifyPlugin({
+    //   sourceMap: true,
+    //   uglifyOptions: { ecma: 8 },
+    // }),
     // 使用uglify-webpack-plugin 来压缩js代码
     // 如果在命令中的 --mode production，默认已经使用了JS代码压缩插件的
     new HtmlWebpackPlugin({
@@ -219,10 +219,10 @@ module.exports = (env, argv) => {
       chunkFilename: "[id].css"
     }),
     /* 动态加载模块，不需要在文件中import 可以直接$('#item')这样使用 */
-    new webpack.ProvidePlugin({
-      $: 'jquery', 
-      jQuery: 'jquery'
-    }),
+    // new webpack.ProvidePlugin({
+    //   $: 'jquery', 
+    //   jQuery: 'jquery'
+    // }),
     new webpack.NamedModulesPlugin(), // 用于启动 HMR 时可以显示模块的相对路径
     new webpack.HotModuleReplacementPlugin(), // Hot Module Replacement插件
     new ManifestPlugin({
