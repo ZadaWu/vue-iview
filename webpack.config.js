@@ -4,8 +4,11 @@ const UglifyPlugin = require('uglifyjs-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const mock = require('./mock.js')
+const ManifestPlugin = require('webpack-manifest-plugin')
 
-module.exports = {
+module.exports = (env, argv) => {
+  console.log(9, argv.mode);
+  return {
   /**
    * 可以写多个入口
    * {
@@ -20,6 +23,8 @@ module.exports = {
     filename: 'bundle.js'
   },
 
+  devtool: argv.mode === 'development' ? 'source-map': '',
+
   devServer: {
     /** 可以使用proxy用来配置 webpack-dev-server 将特定URL的请求代理到另外一台服务器上。当你有单独的后端开发服务器用于请求API时，非常有用 
      * proxy: {
@@ -29,6 +34,7 @@ module.exports = {
      *},
      *}
     */
+    hot: argv.mode === 'development' ? true : false, // dev server 的配置要启动hot，或者在命令行中代参数开启
     before(app) {
       // 使用mock数据 
       mock(app)
@@ -135,7 +141,13 @@ module.exports = {
     new webpack.ProvidePlugin({
       $: 'jquery', 
       jQuery: 'jquery'
+    }),
+    new webpack.NamedModulesPlugin(), // 用于启动 HMR 时可以显示模块的相对路径
+    new webpack.HotModuleReplacementPlugin(), // Hot Module Replacement插件
+    new ManifestPlugin({
+      fileName: 'my-manifest.json',
+      publicPath: path.resolve(__dirname, 'dist')
     })
   ]
-  
-}
+}}
+

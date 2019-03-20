@@ -3,6 +3,7 @@ import './style/index1.less';
 
 export default function () {
   return {
-    'className': 'test'
+    'className': 'test',
+    'user': 'zadawu'
   };
 }
