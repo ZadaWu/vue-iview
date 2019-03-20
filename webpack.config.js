@@ -23,6 +23,12 @@ module.exports = (env, argv) => {
     filename: 'bundle.js'
   },
 
+  optimization: {
+    splitChunks: {
+      chunks: 'all', // 所有的 chunks 代码公共的部分分离出来成为一个单独的文件 
+    }
+  },
+
   devtool: argv.mode === 'development' ? 'source-map': '',
 
   devServer: {
@@ -103,7 +109,17 @@ module.exports = (env, argv) => {
           path.resolve(__dirname, 'src')
         ],
         exclude: /node_modules/, // 不需要解析的部分
-        use:'babel-loader'
+        use:  [
+        {
+          loader: 'babel-loader', 
+          options: {//如果有这个设置则不用再添加.babelrc文件进行配置
+            'babelrc': false,// 不采用.babelrc的配置
+            'plugins': [
+              'dynamic-import-webpack'
+            ],
+            presets: ['@babel/preset-env']
+          }
+        }]
       },
       /* 引入loader来解析和处理css文件 */
       {
@@ -114,12 +130,7 @@ module.exports = (env, argv) => {
         use: [
           MiniCssExtractPlugin.loader,
           // 'style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              minimize: true, // 使用 css 的压缩功能
-            },
-          },
+          'css-loader'
         ]
         /**
          * css-loader 负责解析css代码，主要是为了处理css的依赖，例如： `@import`和`url（）`等引用外部的声明
@@ -166,7 +177,11 @@ module.exports = (env, argv) => {
   },
 
   plugins: [
-    new UglifyPlugin(),
+    // 里面的参数是用来解决import与箭头函数可能出错的
+    new UglifyPlugin({
+      sourceMap: true,
+      uglifyOptions: { ecma: 8 },
+    }),
     // 使用uglify-webpack-plugin 来压缩js代码
     // 如果在命令中的 --mode production，默认已经使用了JS代码压缩插件的
     new HtmlWebpackPlugin({
