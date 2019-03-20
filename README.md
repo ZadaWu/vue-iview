@@ -5,7 +5,7 @@
   以下是我在学习过程中，觉得一些重要的点
 
   1. webpack的配置其实是一个Nodejs的脚本
-  
+
   2. webpack默认从作为入口的.js文件进行构建（更多是基于SPA去考虑），但通常一个前端项目都是从一个页面（即html）出发。我们会在里面使用`script`标签直接引用构建好的js文件。如果希望文件名或路径每次编译不一致，对好讲HTML饮用路径和我们构建的结果关联起来，使用`html-webpack-plugin`
 
   3. webpack4.0不再支持`extract-text-webpack-plugin`，建议通过[mini-css-extract-plugin](https://www.npmjs.com/package/mini-css-extract-plugin)来代替
@@ -26,3 +26,17 @@
     * 解析模块名
       查找当前文件目录下，父级目录及以上目录下的 node_modules 文件夹，看是否有对应名称的模块
     * 解析绝对路径（不建议使用）
+
+  8. 使用[ProvidePlugin](https://webpack.docschina.org/plugins/provide-plugin/)自动加载模块，而不必到处import活着require
+
+  9. 使用[IgnorePlugin](https://webpack.docschina.org/plugins/ignore-plugin/#src/components/Sidebar/Sidebar.jsx)用于忽略某些特定的模块，让webpack不把制定的模块打包进去
+
+  10. 使用DefinePlugin可以创建一些在编译时可以配置的全局变量，这些常量我们可以在webpack的配置中去指定
+
+  11. copy-webpack-plugin可以用来复制文件
+
+  12. [如何给wepack配置不同的环境](https://webpack.docschina.org/configuration/configuration-types/)
+
+  13. 可以在webpack.config.js 中使用 before 和 after在webpack-dev-server定义额外的中间件
+
+  14. [sourceMap的原理与应用](https://www.jianshu.com/p/ebf0ca8febb2)

@@ -1,7 +1,9 @@
+const webpack = require('webpack')
 const path = require('path')
 const UglifyPlugin = require('uglifyjs-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+const mock = require('./mock.js')
 
 module.exports = {
   /**
@@ -16,6 +18,21 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js'
+  },
+
+  devServer: {
+    /** 可以使用proxy用来配置 webpack-dev-server 将特定URL的请求代理到另外一台服务器上。当你有单独的后端开发服务器用于请求API时，非常有用 
+     * proxy: {
+     *'/api': {
+     *  target: "http://localhost:3000", // 将 URL 中带有 /api 的请求代理到本地的 3000 端口的服务上
+     *  pathRewrite: { '^/api': '' }, // 把 URL 中 path 部分的 `api` 移除掉
+     *},
+     *}
+    */
+    before(app) {
+      // 使用mock数据 
+      mock(app)
+    }
   },
 
   module: {
@@ -113,6 +130,11 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: "[name].css", //位每一个入口创建独立分离的文件
       chunkFilename: "[id].css"
+    }),
+    /* 动态加载模块，不需要在文件中import 可以直接$('#item')这样使用 */
+    new webpack.ProvidePlugin({
+      $: 'jquery', 
+      jQuery: 'jquery'
     })
   ]
   
