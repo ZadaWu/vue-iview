@@ -203,7 +203,11 @@ module.exports = (env, argv) => {
     extensions: ['.js'],
     // 这里的顺序代表匹配后缀的优先级，例如对于 index.js 和 index.jsx，会优先选择 index.js
     // 避免新增默认文件，编码时使用详细的文件路径，代码会更容易解读，也有益于提高构建速度
-    mainFiles: ['index']
+    mainFiles: ['index'],
+    // 支持直接配置src下面的绝对路径
+    alias: {
+      '@': path.resolve(__dirname, 'src')
+    }
   },
 
   plugins: [
