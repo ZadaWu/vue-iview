@@ -7,6 +7,12 @@
 <script>
 export default {
   name: 'Form',
+  provide () {
+    // 这个是可以实现多层
+    return {
+      form: this
+    };
+  },
   data () {
     return {
       fields: []

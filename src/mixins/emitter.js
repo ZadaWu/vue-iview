@@ -5,7 +5,7 @@ function broadcast(componentName, eventName, params) {
     if( name === componentName) {
       child.$emit.apply(child, [eventName].concat(params));
     } else {
-      broadcast.apply(child, [componentName, eventName]).concat([params])
+      broadcast.apply(child, [componentName, eventName]).concat([params]);
     }
   });
 }
@@ -34,4 +34,4 @@ export default {
       broadcast.call(this, componentName, eventName, params);
     }
   }
-}
+};

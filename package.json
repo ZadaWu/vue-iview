@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/ZadaWu/vue-iview#readme",
   "dependencies": {
+    "async-validator": "^1.10.1",
     "babel-core": "^6.26.3",
     "babel-eslint": "^10.0.1",
     "css-loader": "^2.1.1",
