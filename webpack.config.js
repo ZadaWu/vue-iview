@@ -1,11 +1,12 @@
 const webpack = require('webpack');
 const path = require('path');
-const UglifyPlugin = require('uglifyjs-webpack-plugin');
+// const UglifyPlugin = require('uglifyjs-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const mock = require('./mock.js');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 module.exports = (env, argv) => {
   console.log(9, argv.mode);
@@ -26,7 +27,7 @@ module.exports = (env, argv) => {
   },
 
   optimization: {
-    runtimeChunk: 'single',
+    // runtimeChunk: argv.mode === 'development' ? 'multiple' : 'single',
     splitChunks: {
       cacheGroups: {
         vendor: {
@@ -69,6 +70,10 @@ module.exports = (env, argv) => {
             limit: 8192, // 单位是byte，当文件小雨8KB时作为DataURL处理
           }
         }]
+      },
+      {
+        test: /\.vue$/,
+        loader: 'vue-loader'
       },
       /* 图片压缩 */
       // {
@@ -138,6 +143,8 @@ module.exports = (env, argv) => {
           path.resolve(__dirname, 'src'),
         ],
         use: [
+          // 对于vue文件，需要县添加vue-style-loader，不然在编译时会出现css的错误
+          'vue-style-loader',
           MiniCssExtractPlugin.loader,
           // 'style-loader',
           'css-loader'
@@ -218,6 +225,7 @@ module.exports = (env, argv) => {
       filename: "[name].css", //位每一个入口创建独立分离的文件
       chunkFilename: "[id].css"
     }),
+    new VueLoaderPlugin(),
     /* 动态加载模块，不需要在文件中import 可以直接$('#item')这样使用 */
     // new webpack.ProvidePlugin({
     //   $: 'jquery', 
