@@ -1,4 +1,7 @@
 // 目录结构
-import Button from './index.vue';
+import Button from './button.vue';
+import ButtonGroup from './button-group.vue';
+
+Button.Group =  ButtonGroup;
 
 export default Button;
