@@ -9,9 +9,8 @@ export default {
 }
 </script>
 
-<style lang="css">
-.home{
-  color: red;
-  font-size: 80px;
-}
+<style lang="stylus" scoped>
+.home
+  color red 
+  font-size 80px
 </style>

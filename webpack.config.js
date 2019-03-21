@@ -170,6 +170,15 @@ module.exports = (env, argv) => {
          * 这个插件需要干涉模块转换的内容，所以需要使用它对应的loader：less-loader，还要安装依赖less
          */
       },
+      /** 支持stylus */
+      {
+        test: /\.styl(us)?$/,
+        use: [
+          'vue-style-loader',
+          'css-loader',
+          'stylus-loader'
+        ]
+      },
       {
         test: /\.(png|jpg|git$)/,
         use: [
