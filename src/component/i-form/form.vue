@@ -48,7 +48,7 @@ export default {
     // 公开方法： 重置全部数据
     resetFields() {
       this.fields.forEach(field => {
-        field.resetFields();
+        field.resetField();
       });
     },
     // 公开方法： 全部校验数据，支持promise

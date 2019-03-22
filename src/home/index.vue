@@ -53,7 +53,7 @@ export default {
       })
     },
     handleReset () {
-      this.$refs.form.reset()
+      this.$refs.form.resetFields()
     }
   }
 }
