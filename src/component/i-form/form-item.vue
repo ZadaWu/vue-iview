@@ -1,8 +1,9 @@
 <template>
   <div>
-    <label v-if="label">{{label}}</label>
+    <label v-if="label"  :class="{ 'form-item-label-required': isRequired }">{{label}}</label>
     <div>
       <slot></slot>
+      <div v-if="validateState === 'error'" class="form-item-message">{{validateMessage}}</div>
     </div>
   </div>
 </template>
@@ -15,6 +16,7 @@ export default {
   name: 'FromItem',
   data () {
     return {
+      isRequired: false, // 是否为必填
       validateState: '', // 校验状态
       validateMessage: '', // 校验不通过时的提示信息
     }
@@ -32,11 +34,16 @@ export default {
   },
   computed: {
     filedValue () {
-      return this.from.model[this.prop]
+      return this.form.model[this.prop]
     }
   },
   methods: {
     setRules () {
+      let rules = this.getRules() || [];
+      rules.every((rule) => {
+        // 如果当前校验规则中有必填项，则标记出来
+        this.isRequired = rule.isRequired;
+      });
       this.$on('on-form-blur', this.onFieldBlur);
       this.$on('on-form-change', this.onFieldChange)
     },
@@ -70,7 +77,6 @@ export default {
       let model = {};
 
       model[this.prop] = this.filedValue;
-
       validator.validate(model, {firstFields: true}, errors => {
         this.validateState = !errors ? 'success' : 'error';
         this.validateMessage = errors ? errors[0].message : '';
@@ -78,16 +84,24 @@ export default {
         callback(this.validateMessage);
       })
     },
+    resetField () {
+      this.validateState = this.validateMessage = '';
+      this.form.model[this.prop] = this.initialValue;
+    },
     onFieldBlur() {
       this.validate('blur');
     },
     onFieldChange() {
       this.validate('change');
-    }
+    },
   },
   mounted () {
     if (this.prop) {
       this.dispatch('Form', 'on-form-item-add', this);
+
+      // 设置初始值，以便在重置时恢复默认值
+      this.initialValue = this.filedValue;
+
       this.setRules()
     }
   },
@@ -97,3 +111,12 @@ export default {
   }
 }
 </script>
+<style>
+  .form-item-label-required:before {
+    content: '*';
+    color: red;
+  }
+  .form-item-message {
+    color: red;
+  }
+</style>

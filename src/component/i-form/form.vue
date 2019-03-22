@@ -43,6 +43,35 @@ export default {
         this.fields.splice(this.fields.indexOf(field), 1);
       }
     });
+  },
+  methods: {
+    // 公开方法： 重置全部数据
+    resetFields() {
+      this.fields.forEach(field => {
+        field.resetFields();
+      });
+    },
+    // 公开方法： 全部校验数据，支持promise
+    validate(callback) {
+      return new Promise(resolve => {
+        let valid = true;
+        let count = 0;
+        this.fields.forEach(field => {
+          field.validate('', errors => {
+            if (errors) {
+              valid = false;
+            }
+            if (++count === this.fields.length) {
+              // 全部完成
+              resolve(valid);
+              if (typeof callback === 'function') {
+                callback(valid);
+              }
+             }
+          })
+        })
+      });
+    }
   }
 }
 </script>
